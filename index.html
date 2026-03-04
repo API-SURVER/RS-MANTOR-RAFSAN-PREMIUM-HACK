@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="bn">
+ <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>𝐑ś™ 𝗠𝗔𝗡𝗧𝗢𝗥 𝗥𝗔𝗙𝗦𝗔𝗡</title>
+
+  <style>
+    html,body{
+      height:100%;
+      margin:0;
+      background:#000;
+      color:#fff;
+      font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif;
+      overflow:hidden;
+    }
+
+    /* iframe */
+    #gameFrame{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      border:0;
+      background:#000;
+      z-index:1;
+    }
+
+    /* Main draggable box */
+    #box{
+      position:fixed;
+      top:20px;
+      left:20px;
+      width:100px;
+      padding:6px;
+      background:rgba(0,0,0,0.88);
+      border-radius:8px;
+      box-shadow:0 0 12px #00c0ff;
+      text-align:center;
+      z-index:10030;
+      user-select:none;
+      touch-action:none;
+      cursor:move; /* পুরো বক্সেই কার্সর move দেখাবে */
+    }
+
+    /* Login Mode */
+    #loginContent {
+      display:block;
+      pointer-events:auto;
+      cursor:default; /* লগইনের ভিতরে ডিফল্ট কার্সর */
+    }
+    #mainContent {
+      display:none;
+    }
+
+    #loginTitle {
+      font-size:10px;
+      font-weight:bold;
+      background:linear-gradient(to right,#00c0ff,#ff00c0);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:5px;
+    }
+
+    #passwordInput {
+      width:85%;
+      padding:5px;
+      background:rgba(0,0,0,0.6);
+      border:1px solid #00c0ff;
+      border-radius:5px;
+      color:#fff;
+      font-size:10px;
+      margin-bottom:6px;
+      outline:none;
+      cursor:text; /* ইনপুটে টেক্সট কার্সর */
+    }
+
+    #loginBtn {
+      width:70%;
+      padding:5px;
+      background:linear-gradient(to right,#00ffaa,#00c0ff);
+      border:none;
+      border-radius:30px;
+      color:white;
+      font-size:11px;
+      font-weight:bold;
+      cursor:pointer;
+      box-shadow:0 0 8px rgba(0,192,255,0.6);
+    }
+
+    #loginBtn:hover {
+      transform:scale(1.05);
+    }
+
+    #errorMsg {
+      color:#ff6b6b;
+      font-size:8px;
+      margin-top:3px;
+      display:none;
+    }
+
+    /* Main Overlay Content */
+    #name{
+      font-size:10px;
+      font-weight:700;
+      margin-bottom:2px;
+    }
+
+    #clock{
+      font-size:10px;
+      color:orange;
+      margin-bottom:2px;
+    }
+
+    #status{
+      font-size:14px;
+      font-weight:800;
+      margin-bottom:2px;
+    }
+
+    #next{
+      font-size:9px;
+      color:#7fff7f;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Game iframe -->
+  <iframe id="gameFrame" src="https://tkclub2.com/#/register?invitationCode=74733260873"><"https://tkclub2.com/#/home/AllLotteryGames/WinGo?id=1">
+  </iframe>
+
+  <!-- Draggable Box -->
+  <div id="box">
+
+    <!-- Login Content (প্রথমে দেখাবে) -->
+    <div id="loginContent">
+      <div id="loginTitle">𝐑ś™ 𝗠𝗔𝗡𝗧𝗢𝗥 𝗥𝗔𝗙𝗦𝗔𝗡</div>
+      <input type="password" id="passwordInput" placeholder="Password">
+      <button id="loginBtn">Login</button>
+      <div id="errorMsg">Wrong Password!</div>
+    </div>
+
+    <!-- Main Content (লগইনের পর দেখাবে) -->
+    <div id="mainContent">
+      <div id="name">𝐑ś™ 𝗠𝗔𝗡𝗧𝗢𝗥 𝗥𝗔𝗙𝗦𝗔𝗡</div>
+      <div id="clock">15:48:08</div>
+      <div id="status" style="color: rgb(127, 255, 127);">SMALL</div>
+      <div id="next">Next: 22s</div>
+    </div>
+  </div>
+
+<script>
+  // পাসওয়ার্ড
+  const correctPassword = "Rafi198";
+
+  const passwordInput = document.getElementById('passwordInput');
+  const loginBtn = document.getElementById('loginBtn');
+  const errorMsg = document.getElementById('errorMsg');
+  const loginContent = document.getElementById('loginContent');
+  const mainContent = document.getElementById('mainContent');
+
+  loginBtn.addEventListener('click', () => {
+    if (passwordInput.value === correctPassword) {
+      loginContent.style.display = 'none';
+      mainContent.style.display = 'block';
+      errorMsg.style.display = 'none';
+      passwordInput.value = '';
+    } else {
+      errorMsg.style.display = 'block';
+      passwordInput.value = '';
+    }
+  });
+
+  // Enter চাপলেও লগইন
+  passwordInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      loginBtn.click();
+    }
+  });
+
+  /* Clock */
+  function updateClock(){
+    const d=new Date();
+    document.getElementById('clock').textContent =
+      String(d.getHours()).padStart(2,'0')+':' +
+      String(d.getMinutes()).padStart(2,'0')+':' +
+      String(d.getSeconds()).padStart(2,'0');
+  }
+  setInterval(updateClock,1000);
+  updateClock();
+
+  /* BIG / SMALL logic */
+  const cycle=30;
+  const seq=[
+    'BIG','BIG',
+    'SMALL','SMALL','SMALL',
+    'BIG',
+    'SMALL','SMALL',
+    'BIG','BIG','BIG','BIG','BIG',
+    'SMALL'
+  ];
+
+  function updateSeq(){
+    const d=new Date();
+    const t=d.getHours()*3600+d.getMinutes()*60+d.getSeconds();
+    const i=Math.floor(t/cycle)%seq.length;
+    const cur=seq[i];
+
+    const st=document.getElementById('status');
+    st.textContent=cur;
+    st.style.color=cur==='BIG'?'#ff6b6b':'#7fff7f';
+
+    document.getElementById('next').textContent =
+      'Next: '+(cycle-(t%cycle))+'s';
+  }
+  setInterval(updateSeq,1000);
+  updateSeq();
+
+  /* Drag - পুরো বক্স ধরে নড়ানো যাবে, কিন্তু ইনপুট/বাটনে ক্লিক করলে ড্র্যাগ হবে না */
+  const box = document.getElementById('box');
+  let drag=false, ox=0, oy=0, startedOnInput=false;
+
+  box.addEventListener('mousedown', e => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') {
+      startedOnInput = true;
+      return;
+    }
+    startedOnInput = false;
+    drag = true;
+    ox = e.clientX - box.offsetLeft;
+    oy = e.clientY - box.offsetTop;
+  });
+
+  window.addEventListener('mouseup', () => {
+    drag = false;
+    startedOnInput = false;
+  });
+
+  window.addEventListener('mousemove', e => {
+    if (!drag || startedOnInput) return;
+    box.style.left = (e.clientX - ox) + 'px';
+    box.style.top = (e.clientY - oy) + 'px';
+  });
+
+  // Touch support
+  box.addEventListener('touchstart', e => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
+    drag = true;
+    const t = e.touches[0];
+    ox = t.clientX - box.offsetLeft;
+    oy = t.clientY - box.offsetTop;
+    e.preventDefault();
+  }, {passive: false});
+
+  window.addEventListener('touchend', () => drag = false);
+
+  window.addEventListener('touchmove', e => {
+    if (!drag) return;
+    const t = e.touches[0];
+    box.style.left = (t.clientX - ox) + 'px';
+    box.style.top = (t.clientY - oy) + 'px';
+    e.preventDefault();
+  }, {passive: false});
+</script>
+
+
+<style>.qc-cmp-showing { visibility: hidden !important; } body.didomi-popup-open { overflow: auto !important; } #didomi-host { visibility: hidden !important; }</style>
+<style>.qc-cmp-showing { visibility: hidden !important; } body.didomi-popup-open { overflow: auto !important; } #didomi-host { visibility: hidden !important; }</style></body></html>
